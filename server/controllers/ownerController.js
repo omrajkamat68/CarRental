@@ -1,7 +1,7 @@
 import imagekit from "../configs/imageKit.js";
 import Car from "../models/Car.js";
 import User from "../models/User.js";
-import fs from "fs"
+import fs from "fs";
 
 export const changeRoleToOwner = async (req, res) => {
   try {
@@ -17,35 +17,46 @@ export const changeRoleToOwner = async (req, res) => {
 // API to list car
 export const addCar = async (req, res) => {
   try {
-    const {_id} = req.user
-    let car = JSON.parse(req.body.carData)
+    const { _id } = req.user;
+    let car = JSON.parse(req.body.carData);
     const imageFile = req.file;
 
     // Upload image to imagekit
-    const fileBuffer = fs.readFileSync(imageFile.path)
+    const fileBuffer = fs.readFileSync(imageFile.path);
     const response = await imagekit.upload({
       file: fileBuffer,
       fileName: imageFile.originalname,
-      folder: '/cars'
-    })
+      folder: "/cars",
+    });
 
     // optimization through imagekit url transformation
     var optimizedImageUrl = imagekit.url({
-      path : response.filePath,
-      transformation : [
-        {width: '1280'},
-        {quality: 'auto'},
-        {format: 'webp'}
-      ]
+      path: response.filePath,
+      transformation: [
+        { width: "1280" },
+        { quality: "auto" },
+        { format: "webp" },
+      ],
     });
 
     const image = optimizedImageUrl;
-    await Car.create({...car, owner: _id, image})
+    await Car.create({ ...car, owner: _id, image });
 
-    res.json({success: true, message: "Car Added"})
-
+    res.json({ success: true, message: "Car Added" });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
   }
-}
+};
+
+// API to list owner cars
+export const getOwnerCars = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const cars = await Car.find({ owner: _id });
+    res.json({ success: true, cars });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
