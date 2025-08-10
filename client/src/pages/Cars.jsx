@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Title from '../components/Title'
 import { assets, dummyCarData } from '../assets/assets'
 import CarCard from '../components/CarCard'
 import { useSearchParams } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 
 const Cars = () => {
 
@@ -18,6 +19,23 @@ const Cars = () => {
   const [input, setInput] = useState('')
 
   const isSearchData = pickupLocation && pickupDate && returnDate
+  const [filteredCars, setFilteredCars] = useState([])
+
+  const searchCarAvailability = async () => {
+    const {data} = await axios.post('/api/bookings/check-availability', {location: pickupLocation, pickupDate, returnDate})
+    if(data.success){
+      setFilteredCars(data.availableCars)
+      if(data.availableCars.length === 0){
+        toast('No cars available')
+      }
+      return null
+    }
+  }
+
+  useEffect(()=>{
+    isSearchData && searchCarAvailability()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   return (
     <div>
@@ -35,10 +53,10 @@ const Cars = () => {
       </div>
 
       <div className='px-6 md:px-16 lg:px-24 xl:px-32 mt-10'>
-        <p className='text-gray-500 xl:px-20 max-w-7xl mx-auto'>Showing {dummyCarData.length} Cars</p>
+        <p className='text-gray-500 xl:px-20 max-w-7xl mx-auto'>Showing {filteredCars.length} Cars</p>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-4 xl:px-20 max-w-7xl mx-auto'>
-          {cars.map((car, index)=> (
+          {filteredCars.map((car, index)=> (
             <div key={index}>
               <CarCard car={car} />
             </div>
