@@ -114,7 +114,6 @@ cd car-rental
 
 ```bash
 cd server
-cp .env.example .env   # add env values
 npm install
 ```
 
@@ -122,7 +121,6 @@ npm install
 
 ```bash
 cd ../client
-cp .env.example .env   # add env values
 npm install
 ```
 
