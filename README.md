@@ -1,6 +1,6 @@
-# 🚗 CarRent – Car Rental Website (MERN + Vite + Tailwind)
+# 🚗 Car Rental Website (MERN + Vite + Tailwind)
 
-**CarRent** is a modern **MERN stack** application that delivers a seamless car rental experience. Customers can explore cars, book them by location and dates, and manage bookings, while owners can list cars, manage availability, handle bookings, and view revenue insights through a powerful dashboard.
+**CarRental** is a modern **MERN stack** application that delivers a seamless car rental experience. Customers can explore cars, book them by location and dates, and manage bookings, while owners can list cars, manage availability, handle bookings, and view revenue insights through a powerful dashboard.
 
 ---
 
